@@ -1,3 +1,22 @@
+/*
+Front left leg:
+  Hip: 11
+  Shoulder: 10
+  Knee: 9
+Front right leg:
+  Hip: 6
+  Shoulder: 5
+  Knee: 3
+Back left leg:
+  Hip: A0
+  Shoulder: A1
+  Knee: A2
+Back right leg:
+  Hip: A3
+  Shoulder: A4
+  Knee: A5
+*/
+
 #include<Arduino.h>
 #include<Servo.h>
 
