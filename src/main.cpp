@@ -1,64 +1,118 @@
-#include <Arduino.h>
-#include <Servo.h>
+#include<Arduino.h>
+#include<Servo.h>
 
-Servo shoulder;
-Servo knee;
+const float a = 13; // Upper link length (cm)
+const float b = 13; // Lower link length (cm)
+const float c = 0; // Distance between hip and shoulder (cm)
 
-const int l_upper = 13;    // cm
-const int l_lower = 13.5; // cm
-int height;              // cm
+const float pi = M_PI;
 
-struct angles {
+// Define three angles, {x,y,z} coordinates and three servos for each leg
+struct legVars{
+  // Servo motors
+  Servo Ship;
+  Servo Sshoulder;
+  Servo Sknee;
+  // Angle variables
+  int hip;
   int shoulder;
   int knee;
-} leg1, leg2, leg3, leg4;
+  // Distance variables
+  float x;
+  float y;
+  float z;
+  float h;
+} FRleg, FLleg, BRleg, BLleg;
 
-void inverse_kinematics(int h, int lu, int ll, int leg){
-  int k_rad;
-  int k_angle;
-  int s_rad;
-  int s_angle;
+void changeHeight(){
+  for (int h = 10; h<=20; h++){
+    FLleg.h = BLleg.h = h;
+    FLleg.shoulder = BLleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(2*a*FLleg.h))) * (180/pi);
+    FLleg.knee = BLleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(2*a*b))) * (180/pi);
 
-  s_rad = ((pow(h, 2) + pow(lu, 2) - pow(ll, 2))/(2*lu*h));
-  s_rad = acos(s_rad);
-  s_angle = s_rad*(180/PI);
+    FRleg.h = BRleg.h = h;
+    FRleg.shoulder = BRleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(-2*a*FLleg.h))) * (180/pi);
+    FRleg.knee = BRleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(-2*a*b))) * (180/pi);
 
-  k_rad = ((pow(lu, 2) + pow(ll, 2) - pow(h, 2))/(2*lu*ll));
-  k_rad = acos(k_rad);
-  k_angle = k_angle*(180/PI);
+    FLleg.Sshoulder.write(FLleg.shoulder);
+    FLleg.Sknee.write(FLleg.knee);
+    BLleg.Sshoulder.write(BLleg.shoulder);
+    BLleg.Sknee.write(BLleg.knee);
+    
+    FRleg.Sshoulder.write(FRleg.shoulder);
+    FRleg.Sknee.write(FRleg.knee);
+    BRleg.Sshoulder.write(BRleg.shoulder);
+    BRleg.Sknee.write(BRleg.knee);
 
-  switch(leg){
-    case 1:
-      leg1.shoulder = s_angle;
-      leg1.knee = k_angle;
-    case 2:
-      leg2.shoulder = s_angle;
-      leg2.knee = k_angle;
-    case 3:
-      leg3.shoulder = s_angle;
-      leg3.knee = k_angle;
-    case 4:
-      leg3.shoulder = s_angle;
-      leg4.knee = k_angle;
+    Serial.print("Left:");
+    Serial.print(FLleg.shoulder);
+    Serial.print(",");
+    Serial.print(FLleg.knee);
+    Serial.println();
+    Serial.print("Right:");
+    Serial.print(FRleg.shoulder);
+    Serial.print(",");
+    Serial.print(FRleg.knee);
+    Serial.println();
+
+    delay(10);
+  }
+
+  for (int h = 20; h>=10; h--){
+    FLleg.h = BLleg.h = h;
+    FLleg.shoulder = BLleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(2*a*FLleg.h))) * (180/pi);
+    FLleg.knee = BLleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(2*a*b))) * (180/pi);
+
+    FRleg.h = BRleg.h = h;
+    FRleg.shoulder = BRleg.shoulder = (acos((sq(a) + sq(FRleg.h) - sq(b))/(-2*a*FRleg.h))) * (180/pi);
+    FRleg.knee = BRleg.knee = (acos((sq(a) + sq(b) - sq(FRleg.h))/(-2*a*b))) * (180/pi);
+
+    FLleg.Sshoulder.write(FLleg.shoulder);
+    FLleg.Sknee.write(FLleg.knee);
+    BLleg.Sshoulder.write(BLleg.shoulder);
+    BLleg.Sknee.write(BLleg.knee);
+    
+    FRleg.Sshoulder.write(FRleg.shoulder);
+    FRleg.Sknee.write(FRleg.knee);
+    BRleg.Sshoulder.write(BRleg.shoulder);
+    BRleg.Sknee.write(BRleg.knee);
+
+    Serial.print("Left:");
+    Serial.print(FLleg.shoulder);
+    Serial.print(",");
+    Serial.print(FLleg.knee);
+    Serial.println();
+    Serial.print("Right:");
+    Serial.print(FRleg.shoulder);
+    Serial.print(",");
+    Serial.print(FRleg.knee);
+    Serial.println();
+    
+    delay(10);
   }
 }
 
-void setup() {
-  Serial.begin(9600);
+void setup(){
+  // Front left leg
+  FLleg.Ship.attach(11);
+  FLleg.Sshoulder.attach(10);
+  FLleg.Sknee.attach(9);
+  // Front right leg
+  FRleg.Ship.attach(6);
+  FRleg.Sshoulder.attach(5);
+  FRleg.Sknee.attach(3);
+  // Back left leg
+  BLleg.Ship.attach(A0);
+  BLleg.Sshoulder.attach(A1);
+  BLleg.Sknee.attach(A2);
+  // Back right leg
+  BRleg.Ship.attach(A3);
+  BRleg.Sshoulder.attach(A4);
+  BRleg.Sknee.attach(A5);
 
-  shoulder.attach(10);
-  knee.attach(9);
-  
-  Serial.println("Starting loop.");
+  Serial.begin(9600);
 }
 
-void loop() {
-  inverse_kinematics(height, l_upper, l_lower, 1);
-
-  shoulder.write(leg1.shoulder);
-  knee.write(leg1.shoulder);
-
-  Serial.println("Angles:");
-  Serial.println(leg1.shoulder);
-  Serial.println(leg1.knee);
+void loop(){
+  changeHeight();
 }
