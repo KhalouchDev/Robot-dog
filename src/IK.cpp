@@ -8,11 +8,11 @@ void IK(legVars leg, float x, float y, float z){
 
     // Calculate shoulder and knee angles based on the new leg length
     if (leg.side == 0) {    // Left
-        leg.shoulder = ((acos((sq(a) + sq(leg.h) - sq(b))/(2*a*leg.h))) * (180/pi)) + leg.shoulderTheta;
+        leg.shoulder = ((acos((sq(a) + sq(leg.h) - sq(b))/(2*a*leg.h))) + leg.shoulderTheta) * (180/pi);
         leg.knee = (acos((sq(a) + sq(b) - sq(leg.h))/(2*a*b))) * (180/pi);
     }
     else {  // Right
-        leg.shoulder = ((acos((sq(a) + sq(leg.h) - sq(b))/(-2*a*leg.h))) * (180/pi)) + leg.shoulderTheta;
+        leg.shoulder = ((acos((sq(a) + sq(leg.h) - sq(b))/(-2*a*leg.h))) + leg.shoulderTheta) * (180/pi);
         leg.knee = (acos((sq(a) + sq(b) - sq(leg.h))/(-2*a*b))) * (180/pi);
     }
 }
