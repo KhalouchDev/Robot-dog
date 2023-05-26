@@ -19,6 +19,7 @@ Back right leg:
 
 #include<Arduino.h>
 #include<Servo.h>
+#include<IK.cpp>
 
 const float a = 13; // Upper link length (cm)
 const float b = 13; // Lower link length (cm)
@@ -50,7 +51,7 @@ void changeHeight(int h){
     FLleg.shoulder = BLleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(2*a*FLleg.h))) * (180/pi);
     FLleg.knee = BLleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(2*a*b))) * (180/pi);
     // Calculate right side
-    
+
     FRleg.shoulder = BRleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(-2*a*FLleg.h))) * (180/pi);
     FRleg.knee = BRleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(-2*a*b))) * (180/pi);
 
