@@ -43,13 +43,14 @@ struct legVars{
   float h;
 } FRleg, FLleg, BRleg, BLleg;
 
-void changeHeight(){
-  for (int h = 10; h<=20; h++){
-    FLleg.h = BLleg.h = h;
+void changeHeight(int h){
+    FLleg.h = BLleg.h = FRleg.h = BRleg.h = h;
+
+    // Calculate left side
     FLleg.shoulder = BLleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(2*a*FLleg.h))) * (180/pi);
     FLleg.knee = BLleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(2*a*b))) * (180/pi);
-
-    FRleg.h = BRleg.h = h;
+    // Calculate right side
+    
     FRleg.shoulder = BRleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(-2*a*FLleg.h))) * (180/pi);
     FRleg.knee = BRleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(-2*a*b))) * (180/pi);
 
@@ -62,53 +63,6 @@ void changeHeight(){
     FRleg.Sknee.write(FRleg.knee);
     BRleg.Sshoulder.write(BRleg.shoulder);
     BRleg.Sknee.write(BRleg.knee);
-
-    Serial.print("Left:");
-    Serial.print(FLleg.shoulder);
-    Serial.print(",");
-    Serial.print(FLleg.knee);
-    Serial.println();
-    Serial.print("Right:");
-    Serial.print(FRleg.shoulder);
-    Serial.print(",");
-    Serial.print(FRleg.knee);
-    Serial.println();
-
-    delay(10);
-  }
-
-  for (int h = 20; h>=10; h--){
-    FLleg.h = BLleg.h = h;
-    FLleg.shoulder = BLleg.shoulder = (acos((sq(a) + sq(FLleg.h) - sq(b))/(2*a*FLleg.h))) * (180/pi);
-    FLleg.knee = BLleg.knee = (acos((sq(a) + sq(b) - sq(FLleg.h))/(2*a*b))) * (180/pi);
-
-    FRleg.h = BRleg.h = h;
-    FRleg.shoulder = BRleg.shoulder = (acos((sq(a) + sq(FRleg.h) - sq(b))/(-2*a*FRleg.h))) * (180/pi);
-    FRleg.knee = BRleg.knee = (acos((sq(a) + sq(b) - sq(FRleg.h))/(-2*a*b))) * (180/pi);
-
-    FLleg.Sshoulder.write(FLleg.shoulder);
-    FLleg.Sknee.write(FLleg.knee);
-    BLleg.Sshoulder.write(BLleg.shoulder);
-    BLleg.Sknee.write(BLleg.knee);
-    
-    FRleg.Sshoulder.write(FRleg.shoulder);
-    FRleg.Sknee.write(FRleg.knee);
-    BRleg.Sshoulder.write(BRleg.shoulder);
-    BRleg.Sknee.write(BRleg.knee);
-
-    Serial.print("Left:");
-    Serial.print(FLleg.shoulder);
-    Serial.print(",");
-    Serial.print(FLleg.knee);
-    Serial.println();
-    Serial.print("Right:");
-    Serial.print(FRleg.shoulder);
-    Serial.print(",");
-    Serial.print(FRleg.knee);
-    Serial.println();
-    
-    delay(10);
-  }
 }
 
 void setup(){
@@ -133,5 +87,5 @@ void setup(){
 }
 
 void loop(){
-  changeHeight();
+
 }
