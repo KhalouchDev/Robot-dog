@@ -29,6 +29,8 @@ const float pi = M_PI;
 
 // Define three angles, {x,y,z} coordinates and three servos for each leg
 struct legVars{
+  // Left (0) or right (1) leg
+  int side;
   // Servo motors
   Servo Ship;
   Servo Sshoulder;
@@ -37,6 +39,7 @@ struct legVars{
   int hip;
   int shoulder;
   int knee;
+  int shoulderTheta;
   // Distance variables
   float x;
   float y;
@@ -67,6 +70,9 @@ void changeHeight(int h){
 }
 
 void setup(){
+  FLleg.side = BLleg.side = 0;
+  FRleg.side = BRleg.side = 1;
+
   // Front left leg
   FLleg.Ship.attach(11);
   FLleg.Sshoulder.attach(10);
