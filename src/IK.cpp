@@ -4,6 +4,11 @@ int hipHyp;
 
 void IK(legVars leg, float x, float y, float z){
     // ===== Translation =====
+    // flip y axis for right legs
+    if(leg.side == 1){
+        y = y*-1;
+    }
+
     // calculate the hip joint and new leg length based on how far the robot moves sideways
     // first triangle
     hipAngle1 = atan((y/z)) * (180/pi);
