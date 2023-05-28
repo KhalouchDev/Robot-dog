@@ -17,9 +17,11 @@ Back right leg:
   Knee: A5
 */
 
-#include<Arduino.h>
-#include<Servo.h>
-#include<IK.cpp>
+#include <Arduino.h>
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h> 
+#include <Servo.h>
+#include <IK.cpp>
 
 const float a = 13; // Upper link length (cm)
 const float b = 13; // Lower link length (cm)
@@ -47,6 +49,8 @@ struct legVars{
   float h;
 } FRleg, FLleg, BRleg, BLleg;
 
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
 void changeHeight(int h){
     FLleg.h = BLleg.h = FRleg.h = BRleg.h = h;
 
@@ -70,6 +74,13 @@ void changeHeight(int h){
 }
 
 void setup(){
+  // lcd
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Robot Dog");
+
+  // configure sides
   FLleg.side = BLleg.side = 0;
   FRleg.side = BRleg.side = 1;
 
